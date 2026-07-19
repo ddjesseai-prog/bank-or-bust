@@ -1,8 +1,9 @@
 # Bank or Bust — design spec
 
-Decisions promoted from `threads/001-bank-or-bust.md` per the rules in
-`PROTOCOL.md`. Empty sections are undecided. When this file is buildable by
-a developer who never reads the thread, the experiment is done.
+**STATUS: CLOSED** — spec ratified by all three models (Turns 9–12,
+Issue #1). This file is buildable without reading the thread.
+
+Decisions promoted from Issue #1 per the rules in `PROTOCOL.md`.
 
 ## Core loop
 
@@ -117,9 +118,26 @@ available.
   `(pull_count, busted, final_pot, max_streak)` — enough to reconstruct
   observed bust-by-pull, EV curve, and streak frequency against the
   designed constants. No second backend path.
-- **Leaderboard integrity mechanism: CONTESTED** — transcript replay
-  (T3) vs deterministic replay (T7) vs per-pull server draws (T8) vs
-  two-mode split (T9). Pending ratification; see thread.
+- **Two-mode RNG split (settles leaderboard integrity):**
+  - **Casual mode (default):** client RNG from `crypto.getRandomValues`
+    — non-deterministic, unpredictable even with devtools. Fully
+    offline, zero latency, local high score only, never submits to the
+    leaderboard. Ships in v1 as a fully static site.
+  - **Daily Vault mode (opt-in, v2):** per-pull server-authoritative
+    draws. `POST /run/start` → server-held seed, returns `run_id`;
+    `POST /run/{id}/pull` → server deals one outcome: `(bust?, reward
+    tier, amount, bustMargin)` where `bustMargin = roll − threshold`
+    for survivors (0 = closest possible non-bust; near-miss fires at
+    ≤ 5). Client never holds future rolls. Bank validates against the
+    server's own record. Round trips hide inside the 1.2s spin;
+    connectivity is required in this mode only.
+- **Telemetry:** stateless, unauthenticated fire-and-forget
+  `POST /telemetry` beacon — `(pull_count, busted, final_pot,
+  max_streak)`, no player_id/run_id/auth, edge-level IP rate limit
+  (~1 write/IP/5s), no app-level state. Decoupled from the Vault
+  backend so casual (default-population) play is measurable. If v1
+  ships with no backend at all, casual-mode play is **untuned by
+  design until v2** — a stated trade-off, not a gap.
 
 ## Decision log
 
@@ -133,3 +151,6 @@ available.
 | 6 | Feel ladder with n=16 caps on BANK growth and vignette | Turn 3 (jesse-claude), caps Turn 7 | Turn 9 (ratified Turn 8) |
 | 7 | Daily Vault: single-run bank submissions only, earliest-timestamp tiebreak | Turns 2/5/7 | Turn 9 (ratified Turns 7–8) |
 | 8 | Core loop micro + macro; streak calendar; no stamina gates | Turns 1/2/4 | Turn 9 (ratified Turns 7–8) |
+| 9 | Two-mode RNG split: casual = client crypto RNG offline; Daily Vault = per-pull server draws (v2) | Turn 9 (jesse-claude) | Turn 12 (ratified Turns 10–11) |
+| 10 | Stateless v1-shippable telemetry beacon, edge IP rate-limited; else "untuned by design" stated | Turn 10 (friend-1), rate limit Turn 11 | Turn 12 (ratified Turn 11) |
+| 11 | `bustMargin = roll − threshold` in Vault per-pull payload; near-miss at ≤5 both modes | Turn 10 (friend-1), sign corrected Turn 11 (friend-2) | Turn 12 (jesse-claude) |
