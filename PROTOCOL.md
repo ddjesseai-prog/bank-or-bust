@@ -1,59 +1,65 @@
 # PROTOCOL — rules for participating models
 
-You are one of three AI models jointly designing a game in this repo. Your
-human will tell you your handle: `friend-1`, `friend-2`, or `jesse-claude`.
-Follow these rules exactly.
+You are one of three AI models jointly designing a game. The conversation is
+**Issue #1** in this repo — treat it as a group chat where each comment is
+one model's turn. Your human will tell you your handle: `friend-1`,
+`friend-2`, or `jesse-claude`.
 
 ## The turn loop
 
-1. **Get the latest thread.** `git pull` if you have shell access, otherwise
-   have your human give you the current contents of
-   `threads/001-bank-or-bust.md`.
-2. **Check the `NEXT:` marker** at the top of the thread file.
-   - If it names **you** → take your turn (steps 3–6).
-   - If it names someone else → do nothing. Do not write. Wait.
-3. **Read the entire thread**, including the design brief and every prior turn.
-4. **Append exactly one turn** at the bottom of the thread file, in this format:
+1. **Read the chat.** With shell access:
+   `gh issue view 1 --repo ddjesseai-prog/bank-or-bust --comments`
+   Without shell access: your human pastes the issue page contents.
+2. **Check the last line of the most recent comment** — it names whose turn
+   is next, e.g. `NEXT: friend-2`.
+   - Names **you** → take your turn (steps 3–5).
+   - Names someone else → do nothing. Wait.
+3. **Read everything**: the opening brief and every comment so far.
+4. **Post exactly one comment** in this format:
 
    ```markdown
    ## Turn N — your-handle
 
-   **Critique:** <1–3 sentences: what in the previous turn is weak, risky,
-   or wrong. Be specific. "I agree with everything" is a rule violation —
-   find the weakest point and push on it.>
+   **Critique:** <1–3 sentences: the weakest, riskiest, or wrongest thing
+   in the previous turn. "I agree with everything" is a rule violation.>
 
-   **Contribution:** <your design work for this turn — advance the game
-   design concretely. Propose mechanics, numbers, flows. Not vibes.>
+   **Contribution:** <your design work — concrete mechanics, numbers,
+   odds, timings, flows. Not vibes.>
 
-   **Decision proposed:** <optional: one sentence stating a design decision
-   you believe is now settled and should be promoted to DESIGN.md.>
+   **Decision proposed:** <optional: one design decision you believe is
+   settled and ready for DESIGN.md.>
+
+   NEXT: <next-handle>
    ```
 
-5. **Update the `NEXT:` marker** at the top of the file to the next handle in
-   the rotation: `friend-1 → friend-2 → jesse-claude → friend-1 → …`
-6. **Commit and push** (or have your human paste your turn into the GitHub
-   web editor and commit).
+   With shell access:
+   `gh issue comment 1 --repo ddjesseai-prog/bank-or-bust --body "..."`
+   Without: your human pastes your comment into the issue and submits it.
+5. **Hand off** via the `NEXT:` line, rotation:
+   `friend-1 → friend-2 → jesse-claude → friend-1 → …`
 
 ## Hard rules
 
-- **One turn per go.** Never write two consecutive turns.
-- **Append-only.** Never edit or delete a previous turn. The only line you
-  may modify is the `NEXT:` marker.
-- **Critique before you build.** Every turn (except Turn 1) must start by
-  challenging something in the previous turn. Three models politely agreeing
-  produces mush.
-- **Be concrete.** Numbers, odds, timings, screen flows. "Make it fun" is
-  not a contribution.
-- **Stay in the file.** All design communication happens in the thread —
-  no side channels.
-- **Promoting to DESIGN.md:** when a proposed decision survives one full
-  rotation without objection, whichever model notices this on its turn
-  writes it into `DESIGN.md` (this is the one exception to touching other
-  files) and notes the promotion in its turn.
+- **One comment per turn.** Never post twice in a row.
+- **Never edit or delete a comment** — the chat is append-only.
+- **Critique before you build.** Every turn after Turn 1 opens by
+  challenging the previous turn. Three models politely agreeing produces
+  mush.
+- **Be concrete.** Every mechanic comes with numbers. They can be wrong —
+  stated numbers give the next model something to attack.
+- **Stay in the chat.** All design communication happens in Issue #1.
+
+## Promoting decisions to DESIGN.md
+
+When a proposed decision survives one full rotation without objection,
+whichever model notices this on its turn promotes it: models with push
+access commit the update to `DESIGN.md` directly; models without say
+`PROMOTE: <decision>` in their comment and `jesse-claude` commits it on
+its next turn. Note every promotion in the decision log table.
 
 ## End state
 
-The thread is done when `DESIGN.md` is a spec a developer could build from
-without reading the thread. When a model believes this is true, it proposes
-`status: closing` in its turn; if the other two models agree on their next
-turns, the last one sets `status: closed` in the thread frontmatter.
+Done when `DESIGN.md` is a spec a developer could build from without
+reading the chat. A model that believes this proposes `STATUS: closing`
+in its turn; if the other two agree on their next turns, `jesse-claude`
+closes Issue #1.
