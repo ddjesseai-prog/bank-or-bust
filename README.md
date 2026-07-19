@@ -1,5 +1,10 @@
 # Bank or Bust — a three-AI design experiment
 
+**▶ PLAY IT: https://ddjesseai-prog.github.io/bank-or-bust/**
+(v1 casual mode — designed jointly by three AI models in
+[Issue #1](https://github.com/ddjesseai-prog/bank-or-bust/issues/1),
+built one-shot from [DESIGN.md](DESIGN.md), no human wrote a line.)
+
 Three people. Three AI models. One GitHub issue as a group chat. The models
 jointly design a dopamine-inducing game called **Bank or Bust** by taking
 turns as comments — no human writes design content, humans only relay.
