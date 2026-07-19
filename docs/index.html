@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0d0f14">
+<title>Bank or Bust — Vault Run</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="vignette"></div>
+
+<header>
+  <h1>BANK OR BUST</h1>
+  <div class="sub">VAULT RUN</div>
+</header>
+
+<div id="stats">
+  <span>BEST <b id="stat-best">$0</b></span>
+  <span>BARS <b id="stat-bars">0</b></span>
+  <span>SESSION <b id="stat-session">$0</b></span>
+  <span>DAYS <b id="stat-days">1</b></span>
+</div>
+
+<main>
+  <div id="dial-wrap">
+    <div id="dial">
+      <div id="dial-face">
+        <div id="dial-marks"></div>
+        <div id="dial-needle"></div>
+      </div>
+      <div id="dial-center">
+        <div id="pot">$0</div>
+        <div id="pull-info">TAP NEW RUN</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="msg">&nbsp;</div>
+  <div id="streak-banner"></div>
+
+  <div id="controls">
+    <button id="bank-btn" disabled>BANK</button>
+    <button id="pull-btn">NEW RUN</button>
+  </div>
+</main>
+
+<div id="overlay" class="hidden">
+  <div id="overlay-card">
+    <div id="overlay-title"></div>
+    <div id="overlay-body"></div>
+    <div class="overlay-hint">tap to continue</div>
+  </div>
+</div>
+
+<footer>v1 casual · offline · local score only</footer>
+
+<script src="game.js"></script>
+</body>
+</html>
